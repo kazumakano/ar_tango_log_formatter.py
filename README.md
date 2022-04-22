@@ -16,5 +16,5 @@ You can pull log files from your Android smartphone with this script.
 You can filter datetime of log files and specify directory to put them.
 Default directory is `raw/`.
 ```sh
-.\pull_external_logs.ps1 -Datetime LOG_DATETIME [-Dir PATH_TO_DIR]
+.\pull_logs.ps1 -Datetime LOG_DATETIME [-Dir PATH_TO_DIR]
 ```
