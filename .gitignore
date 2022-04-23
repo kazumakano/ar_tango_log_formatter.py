@@ -1,4 +1,4 @@
-config/*
-!config/README.md
 formatted/
+map/
 raw/
+script/__pycache__/
