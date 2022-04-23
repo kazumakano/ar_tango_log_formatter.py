@@ -1,5 +1,5 @@
 # tango_log_formatter.py
-This is Python module to resample frequency and convert logs format from CSV exported by [Tango Logger](https://bitbucket.org/uclabnu/tangologger/src/master/) to CSV and pickle able to be interpreted by [particle_filter.py](https://github.com/kazumakano/particle_filter.py).
+This is Python module to transform coordinate, resample frequency and convert logs format from CSV exported by [Tango Logger](https://bitbucket.org/uclabnu/tangologger/src/master/) to CSV and pickle able to be interpreted by [particle_filter.py](https://github.com/kazumakano/particle_filter.py).
 
 ## Usage
 ### pull_logs.ps1
