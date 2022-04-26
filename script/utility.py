@@ -15,10 +15,20 @@ def load_log(file: str) -> tuple[np.ndarray, np.ndarray]:
 
     return data[:, 1:], data[:, 0]
 
+def loop_closure(pos: np.ndarray) -> np.ndarray:
+    err = pos[-1] - pos[0]
+    lc_pos = np.empty(pos.shape, dtype=np.float64)
+
+    for i, p in enumerate(pos):
+        lc_pos[i] = p - err * i / (len(pos) - 1)
+
+    return lc_pos
+
 def vis_on_map(map_img: np.ndarray, pos: np.ndarray) -> None:
     plt.figure(figsize=(20, 20))
     plt.imshow(map_img, cmap="gray")
     plt.scatter(pos[:, 0], pos[:, 1], s=1)
+    plt.scatter(pos[0, 0], pos[0, 1])
 
 def _resample_log(freq: float, pos: np.ndarray, ts: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     resampled_ts = np.arange(ts[0], ts[-1], step=1/freq, dtype=np.float64)
