@@ -1,4 +1,5 @@
 import csv
+import math
 import os.path as path
 import pickle
 from datetime import datetime
@@ -14,6 +15,10 @@ def load_log(file: str) -> tuple[np.ndarray, np.ndarray]:
     print(f"utility.py: {path.basename(file)} has been loaded")
 
     return data[:, 1:], data[:, 0]
+
+def rot(angle: float, pos: np.ndarray) -> np.matrix:
+    angle = math.radians(angle)
+    return np.dot(np.matrix(((math.cos(angle), -math.sin(angle)), (math.sin(angle), math.cos(angle))), dtype=np.float64), pos.T).T
 
 def loop_closure(pos: np.ndarray) -> np.ndarray:
     err = pos[-1] - pos[0]
@@ -66,9 +71,10 @@ def format_log(file_name: str, pos: np.ndarray, ts: np.ndarray, freq: Optional[f
 
     print(f"written to {file_name}.pkl")
 
-def write_conf(file_name: str, init_pos: tuple[int, int], mag: float) -> None:
+def write_conf(angle: float, init_pos: tuple[int, int], mag: float, file_name: str) -> None:
     with open(path.join(path.dirname(__file__), "../formatted/", file_name + ".yaml"), mode="w") as f:
         yaml.safe_dump({
+            "angle": angle,
             "init_pos": init_pos,
             "mag": mag
         }, f)
