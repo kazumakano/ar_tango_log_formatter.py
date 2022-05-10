@@ -10,9 +10,15 @@ from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
 
-def load_log(file: str) -> tuple[np.ndarray, np.ndarray]:
+def load_acc_log(file: str) -> tuple[np.ndarray, np.ndarray]:
+    data = np.loadtxt(file, dtype=np.float64, delimiter=",")
+    print(f"{path.basename(file)} has been loaded")
+
+    return np.linalg.norm(data[:, 1:], axis=1), data[:, 0]
+
+def load_pose_log(file: str) -> tuple[np.ndarray, np.ndarray]:
     data = np.loadtxt(file, dtype=np.float64, delimiter=",")[:, (0, 1, 3)]    # (timestamp, x, y)
-    print(f"utility.py: {path.basename(file)} has been loaded")
+    print(f"{path.basename(file)} has been loaded")
 
     return data[:, 1:], data[:, 0]
 
@@ -29,11 +35,24 @@ def loop_closure(pos: np.ndarray) -> np.ndarray:
 
     return lc_pos
 
-def vis_on_map(map_img: np.ndarray, pos: np.ndarray) -> None:
+def vis_pos_on_map(map_img: np.ndarray, pos: np.ndarray) -> None:
     plt.figure(figsize=(20, 20))
     plt.imshow(map_img, cmap="gray")
     plt.scatter(pos[:, 0], pos[:, 1], s=1)
     plt.scatter(pos[0, 0], pos[0, 1])
+
+def _conv2datetime(ts: np.ndarray) -> np.ndarray:
+    ts = ts.astype(object)
+
+    for i, t in enumerate(ts):
+        ts[i] = datetime.fromtimestamp(t)
+
+    return ts.astype(datetime)
+
+def vis_acc(acc: np.ndarray, ts: np.ndarray, begin: datetime, end: datetime) -> None:
+    plt.figure(figsize=(16, 4))
+    plt.xlim(left=begin, right=end)
+    plt.plot(_conv2datetime(ts), acc)
 
 def _resample_log(freq: float, pos: np.ndarray, ts: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     resampled_ts = np.arange(ts[0], ts[-1], step=1/freq, dtype=np.float64)
@@ -44,17 +63,11 @@ def _resample_log(freq: float, pos: np.ndarray, ts: np.ndarray) -> tuple[np.ndar
 
     return resampled_pos, resampled_ts
 
-def _conv2datetime(ts: np.ndarray) -> np.ndarray:
-    ts = ts.astype(object)
-
-    for i, t in enumerate(ts):
-        ts[i] = datetime.fromtimestamp(t)
-
-    return ts.astype(datetime)
-
-def format_log(file_name: str, pos: np.ndarray, ts: np.ndarray, freq: Optional[float] = None) -> None:
+def format_log(file_name: str, pos: np.ndarray, ts: np.ndarray, freq: Optional[float] = None, offset: Optional[float] = None) -> None:
     if freq is not None:
         pos, ts = _resample_log(freq, pos, ts)
+    if offset is not None:
+        ts += offset
     ts = _conv2datetime(ts)
 
     tgt_file = path.join(path.dirname(__file__), "../formatted/", file_name + ".csv")
