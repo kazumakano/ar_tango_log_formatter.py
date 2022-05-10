@@ -63,12 +63,10 @@ def _resample_log(freq: float, pos: np.ndarray, ts: np.ndarray) -> tuple[np.ndar
 
     return resampled_pos, resampled_ts
 
-def format_log(file_name: str, pos: np.ndarray, ts: np.ndarray, freq: Optional[float] = None, offset: Optional[float] = None) -> None:
+def format_log(file_name: str, offset: float, pos: np.ndarray, ts: np.ndarray, freq: Optional[float] = None) -> None:
     if freq is not None:
         pos, ts = _resample_log(freq, pos, ts)
-    if offset is not None:
-        ts += offset
-    ts = _conv2datetime(ts)
+    ts = _conv2datetime(ts + offset)
 
     tgt_file = path.join(path.dirname(__file__), "../formatted/", file_name + ".csv")
     with open(tgt_file, mode="w", newline="") as f:
@@ -84,12 +82,13 @@ def format_log(file_name: str, pos: np.ndarray, ts: np.ndarray, freq: Optional[f
 
     print(f"written to {file_name}.pkl")
 
-def write_conf(angle: float, init_pos: tuple[int, int], mag: float, file_name: str) -> None:
+def write_conf(angle: float, init_pos: tuple[int, int], mag: float, offset: float, file_name: str) -> None:
     with open(path.join(path.dirname(__file__), "../formatted/", file_name + ".yaml"), mode="w") as f:
         yaml.safe_dump({
             "angle": angle,
             "init_pos": init_pos,
-            "mag": mag
+            "mag": mag,
+            "offset": offset
         }, f)
 
     print(f"written to {file_name}.yaml")
