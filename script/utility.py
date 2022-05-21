@@ -3,12 +3,16 @@ import math
 import os.path as path
 import pickle
 from datetime import datetime
-from typing import Literal, Optional
+from enum import Enum
+from typing import Optional
 import numpy as np
 import yaml
 from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
+class App(Enum):
+    AR_APP = 0
+    TANGO_APP = 1
 
 def load_acc_log(file: str) -> tuple[np.ndarray, np.ndarray]:
     data = np.loadtxt(file, dtype=np.float64, delimiter=",")
@@ -93,7 +97,7 @@ def format_log(file_name: str, offset: float, pos: np.ndarray, ts: np.ndarray, f
 
     print(f"written to {file_name}.pkl")
 
-def write_conf(angle: float, init_pos: tuple[int, int], mag: float, offset: float, app: Literal["ar", "tango"], file_name: str) -> None:
+def write_conf(angle: float, init_pos: tuple[int, int], mag: float, offset: float, app: App, file_name: str) -> None:
     with open(path.join(path.dirname(__file__), "../formatted/", file_name + ".yaml"), mode="w") as f:
         yaml.safe_dump({
             "angle": angle,
