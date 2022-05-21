@@ -50,6 +50,17 @@ def loop_closure(pos: np.ndarray) -> np.ndarray:
 
     return lc_pos
 
+def print_tj_len(map_resolution: float, raw_pos: np.ndarray, tf_pos: np.ndarray) -> None:
+    tj_len = 0
+    for i in range(len(raw_pos) - 1):
+        tj_len += np.linalg.norm(raw_pos[i + 1] - raw_pos[i])
+    print(f"raw length is {tj_len} [m]")
+
+    tj_len = 0
+    for i in range(len(tf_pos) - 1):
+        tj_len += np.linalg.norm(tf_pos[i + 1] - tf_pos[i])
+    print(f"transformed length is {tj_len * map_resolution} [m]")
+
 def vis_pos_on_map(map_img: np.ndarray, pos: np.ndarray) -> None:
     plt.figure(figsize=(20, 20))
     plt.imshow(map_img, cmap="gray")
