@@ -11,8 +11,8 @@ from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
 class App(IntEnum):
-    AR_APP = 0
-    TANGO_APP = 1
+    AR = 0
+    TANGO = 1
 
 def load_acc_log(file: str) -> tuple[np.ndarray, np.ndarray]:
     data = np.loadtxt(file, dtype=np.float64, delimiter=",")
