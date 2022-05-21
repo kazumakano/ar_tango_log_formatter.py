@@ -4,7 +4,7 @@ import os.path as path
 import pickle
 from datetime import datetime
 from enum import IntEnum
-from typing import Optional
+from typing import Literal, Optional
 import numpy as np
 import yaml
 from matplotlib import pyplot as plt
@@ -97,14 +97,15 @@ def format_log(file_name: str, offset: float, pos: np.ndarray, ts: np.ndarray, f
 
     print(f"written to {file_name}.pkl")
 
-def write_conf(angle: float, init_pos: tuple[int, int], mag: float, offset: float, app: App, file_name: str) -> None:
+def write_conf(angle: float, init_pos: tuple[int, int], mag: float, offset: float, app: Literal[App.AR, App.TANGO], file_name: str) -> None:
+    strs = {App.AR: "ar", App.TANGO: "tango"}
     with open(path.join(path.dirname(__file__), "../formatted/", file_name + ".yaml"), mode="w") as f:
         yaml.safe_dump({
             "angle": angle,
             "init_pos": init_pos,
             "mag": mag,
             "offset": offset,
-            "app": app
+            "app": strs[app]
         }, f)
 
     print(f"written to {file_name}.yaml")
