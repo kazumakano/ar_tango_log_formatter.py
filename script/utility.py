@@ -3,14 +3,14 @@ import math
 import os.path as path
 import pickle
 from datetime import datetime
-from enum import Enum
+from enum import IntEnum
 from typing import Optional
 import numpy as np
 import yaml
 from matplotlib import pyplot as plt
 from scipy.interpolate import interp1d
 
-class App(Enum):
+class App(IntEnum):
     AR_APP = 0
     TANGO_APP = 1
 
